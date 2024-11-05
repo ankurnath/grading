@@ -15,7 +15,7 @@ idx = 0
 
 id_to_uin = load_from_pickle('name to csv/id_to_uin.pkl')
 for file in files:
-    if not file.endswith('.py') and not file.endswith('.pkl'):
+    if not file.endswith('.py') and not file.endswith('.pkl') and not file.endswith('.sh'):
 
         file_path = os.path.join(root_folder,file)
         
