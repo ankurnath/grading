@@ -41,7 +41,7 @@ def load_from_pickle(file_path,quiet = True):
 
 
 root_folder = os.getcwd()
-files = os.listdir(root_folder)
+files = [f for f in os.listdir(root_folder) if os.path.isfile(os.path.join(root_folder, f))]
 
 ### This is for informing perpose
 comments = {}
@@ -51,11 +51,16 @@ grade = defaultdict(int)
 summary = {}
 idx = 0
 
+
+id_to_uin = load_from_pickle('name to csv/id_to_uin.pkl')
 for file in files:
-    if not file.endswith('.py'):
+    if not file.endswith('.py') and not file.endswith('.pkl'):
 
         file_path = os.path.join(root_folder,file)
-        name = file.split('_')[0]
+        
+        name,id = file.split('_')[:2]
+        uin = id_to_uin[id]
+        grade[name] = 0
         data = load_from_pickle(file_path=file_path)
         
         ### Data load
@@ -85,7 +90,7 @@ for file in files:
                             grade[name] = 2
 
                             summary [idx] = {'CourseSection':'CSCE-629-700',
-                                             'UIN':'',
+                                             'UIN':uin,
                                              'Name':name,
                                              'n':11,
                                              'k':5,
@@ -93,7 +98,7 @@ for file in files:
                                              'GeneratorMatrix':mat1}
                             
                             summary [idx+1] = {'CourseSection':'CSCE-629-700',
-                                             'UIN':'',
+                                             'UIN':uin,
                                              'Name':name,
                                              'n':11,
                                              'k':5,
@@ -103,7 +108,7 @@ for file in files:
                             idx += 2
 
                         else:
-                            comments[name] = 'out of range'
+                            comments[name] = 'out of range or wrong datatype'
                             continue
 
     
@@ -123,13 +128,13 @@ for file in files:
                 comments[name] = 'Not numpy arrays'
                 continue
 
-
-
-
-
         else:
             comments['name'] = 'keys are missing'
             continue
+
+# Save the dictionary to a pickle file
+with open('629Task1Summmary.pkl', 'wb') as f:
+    pickle.dump(summary, f)
 
 
 
@@ -138,5 +143,6 @@ for file in files:
 
 print(summary)
 
-
+print(comments)
+print(grade)
         
