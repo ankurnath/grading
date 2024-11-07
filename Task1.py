@@ -1,26 +1,35 @@
 from utils import *
 
+task = 'Task1'
+root_folder = f'submissions_{task}'
 
-root_folder = os.getcwd()
-files = [f for f in os.listdir(root_folder) if os.path.isfile(os.path.join(root_folder, f))]
-
-### This is for informing perpose
-comments = {}
-
-grade = defaultdict(int)
+folders = os.listdir(root_folder)
 
 summary = {}
 idx = 0
 
 
-id_to_uin = load_from_pickle('name to csv/id_to_uin.pkl')
-for file in files:
-    if not file.endswith('.py') and not file.endswith('.pkl') and not file.endswith('.sh'):
+all_matrices = {}
 
-        file_path = os.path.join(root_folder,file)
+for folder in folders:
+    folder_path = os.path.join(root_folder,folder)
+    files = [f for f in os.listdir(folder_path) if os.path.isfile(os.path.join(folder_path, f))]
+
+    ### This is for informing perpose
+    comments = {}
+
+    grade = defaultdict(int)
+
+    
+    id_to_uin = load_from_pickle(f'information/{folder}/id_to_uin.pkl')
+
+    
+    for file in files:
         
+        file_path = os.path.join(folder_path,file)
         name,id = file.split('_')[:2]
         uin = id_to_uin[id]
+
         grade[name] = 0
         data = load_from_pickle(file_path=file_path)
         
@@ -50,21 +59,37 @@ for file in files:
                         if is_integer_in_range(mat1) and is_integer_in_range(mat2):
                             grade[name] = 2
 
-                            summary [idx] = {'CourseSection':'CSCE-629-700',
-                                             'UIN':uin,
-                                             'Name':name,
-                                             'n':11,
-                                             'k':5,
-                                             'm':4,
-                                             'GeneratorMatrix':mat1}
+                            all_matrices[idx] = {
+                                                    'n':11,
+                                                    'k':5,
+                                                    'm':4,
+                                                    'GeneratorMatrix':mat1
+
+                                                }
                             
-                            summary [idx+1] = {'CourseSection':'CSCE-629-700',
-                                             'UIN':uin,
-                                             'Name':name,
-                                             'n':11,
-                                             'k':5,
-                                             'm':4,
-                                             'GeneratorMatrix':mat2}
+                            all_matrices[idx+1] = {
+                                                    'n':11,
+                                                    'k':5,
+                                                    'm':4,
+                                                    'GeneratorMatrix':mat2
+
+                                                }
+
+                            summary [idx] = {  'CourseSection':folder,
+                                                'UIN':uin,
+                                                'Name':name,
+                                                'n':11,
+                                                'k':5,
+                                                'm':4,
+                                                'GeneratorMatrix':mat1}
+                            
+                            summary [idx+1] = { 'CourseSection':folder,
+                                                'UIN':uin,
+                                                'Name':name,
+                                                'n':11,
+                                                'k':5,
+                                                'm':4,
+                                                'GeneratorMatrix':mat2}
                             
                             idx += 2
 
@@ -72,7 +97,7 @@ for file in files:
                             comments[name] = 'out of range or wrong datatype'
                             continue
 
-    
+
 
                     else:
                         comments[name] = 'Not full rank'
@@ -94,8 +119,11 @@ for file in files:
             continue
 
 # Save the dictionary to a pickle file
-with open('629Task1Summmary.pkl', 'wb') as f:
+with open(f'summary/629{task}Summmary.pkl', 'wb') as f:
     pickle.dump(summary, f)
+
+with open(f'{task}GeneratorMatrices.pkl', 'wb') as f:
+    pickle.dump(all_matrices, f)
 
 
 
@@ -106,4 +134,5 @@ print(summary)
 
 print(comments)
 print(grade)
+print(all_matrices)
         

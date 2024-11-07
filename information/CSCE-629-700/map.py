@@ -2,7 +2,7 @@ import pandas as pd
 import pickle
 
 
-df = pd.read_csv('/home/grads/a/anath/grading/name to csv/2024-11-05T1317_Grades-CSCE_629_700_.csv')
+df = pd.read_csv('2024-11-05T1317_Grades-CSCE_629_700_.csv')
 # Remove rows with any NaN values
 
 
