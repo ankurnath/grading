@@ -30,7 +30,8 @@ for folder in folders:
         name,id = file.split('_')[:2]
         uin = id_to_uin[id]
 
-        grade[name] = 0
+        
+        grade[float(uin)] = 0.00
         data = load_from_pickle(file_path=file_path)
         
         ### Data load
@@ -38,7 +39,7 @@ for folder in folders:
             data = load_from_pickle(file_path=file_path)
         except:
             comments[name] = 'Data can not be loaded'
-            print(comments[name])
+            print (name,folder,comments[name])
             continue
         ### check if it is a dictionary
         if not isinstance(data, dict):
@@ -57,7 +58,7 @@ for folder in folders:
                     if is_full_rank(mat1) and is_full_rank(mat2):
 
                         if is_integer_in_range(mat1) and is_integer_in_range(mat2):
-                            grade[name] = 2
+                            grade[float(uin)] = 2.00
 
                             all_matrices[idx] = {
                                                     'n':11,
@@ -95,6 +96,10 @@ for folder in folders:
 
                         else:
                             comments[name] = 'out of range or wrong datatype'
+                            print (name,folder,comments[name])
+                            print(mat2.dtype)
+                            print(mat1.dtype)
+                            
                             continue
 
 
@@ -115,9 +120,15 @@ for folder in folders:
                 continue
 
         else:
-            comments['name'] = 'keys are missing'
+            comments[name] = 'keys are missing'
+            print (name,folder,comments[name])
+            print(data.keys())
+            
             continue
+        
 
+    # print(grade)
+    save_to_pickle(data=grade,file_path=f'grades_{folder}_{task}')
 # Save the dictionary to a pickle file
 with open(f'summary/629{task}Summmary.pkl', 'wb') as f:
     pickle.dump(summary, f)
@@ -130,9 +141,9 @@ with open(f'{task}GeneratorMatrices.pkl', 'wb') as f:
 
 
 
-print(summary)
+# print(summary)
 
-print(comments)
-print(grade)
-print(all_matrices)
+# print(comments)
+
+# print(all_matrices)
         

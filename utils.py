@@ -2,7 +2,7 @@ import os
 import pickle
 from collections import defaultdict
 import numpy as np
-
+import pandas as pd
 # Function to check if a matrix is full rank
 def is_full_rank(matrix):
     rank = np.linalg.matrix_rank(matrix)
@@ -23,6 +23,20 @@ def is_integer_in_range(matrix):
     return np.issubdtype(matrix.dtype, np.integer) and np.all((matrix >= -100000) & (matrix <= 100000))
 
 
+
+
+
+def save_to_pickle(data, file_path):
+    """
+    Save data to a pickle file.
+
+    Parameters:
+    - data: The data to be saved.
+    - file_path: The path to the pickle file.
+    """
+    with open(file_path, 'wb') as file:
+        pickle.dump(data, file)
+    print(f'Data has been saved to {file_path}')
 def load_from_pickle(file_path,quiet = True):
     """
     Load data from a pickle file.
